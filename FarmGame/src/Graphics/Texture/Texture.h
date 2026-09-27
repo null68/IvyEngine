@@ -7,8 +7,8 @@ namespace Engine {
 	class Texture {
 	public:
 		explicit Texture(const std::string& path, bool flipVertically = true);
+		explicit Texture(const unsigned char* data, int width, int height, int channels);
 		~Texture();
-
 		Texture(const Texture&) = delete;
 		Texture& operator=(const Texture&) = delete;
 

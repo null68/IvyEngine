@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #ifndef TINYGLTF3_SOURCE_INCLUDED_FROM_HEADER
 #include "tiny_gltf_v3.h"
 #endif

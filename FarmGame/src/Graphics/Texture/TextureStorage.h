@@ -11,6 +11,7 @@ namespace Engine {
 		static TextureStorage& GetInstance();
 
 		std::shared_ptr<Texture> Load(const std::string& name, const std::string& filePath, bool flipVertically = true);
+		std::shared_ptr<Texture> Load(const std::string& name, const unsigned char* data, int width, int height, int channels);
 		std::shared_ptr<Texture> Get(const std::string& name);
 		bool Exists(const std::string& name) const;
 	private:

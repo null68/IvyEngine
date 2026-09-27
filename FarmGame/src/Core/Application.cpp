@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "Application.h"
 #include "../Graphics/Render/Renderer.h"
 #include "../Scene/SceneManager.h"
@@ -6,6 +7,8 @@
 #include "../ECS/Components/TransformComponent.h"
 #include "../ECS/Components/MeshComponent.h"
 #include "../ECS/Components/MaterialComponent.h"
+
+#include "../Game/Demo.h"
 
 namespace Engine {
 	Application::Application() {
@@ -15,6 +18,8 @@ namespace Engine {
 		Renderer::SetViewportSize(Window->GetWidth(), Window->GetHeight());
 
 		// citav gameplay se pokrece kroz scene koje se naprave u Game/ dir-u, zatim se kreiraju ovdje i pokrenu sa SceneManager::GetInstance().LoadScene("")
+		Game::CreateDemoScene();
+		SceneManager::GetInstance().LoadScene("Demo");
 	}
 	void Application::Run() {
 		while (!Window->ShouldClose()) {

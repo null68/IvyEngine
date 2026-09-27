@@ -45,6 +45,35 @@ namespace Engine {
 		stbi_image_free(data);
 	}
 
+	Texture::Texture(const unsigned char* data, int width, int height, int channels) {
+		m_Width = width;
+		m_Height = height;
+		m_Channels = channels;
+		GLenum format = GL_RGB;
+		if (channels == 4) {
+			format = GL_RGBA;
+		}
+		else if (channels == 1) {
+			format = GL_RED;
+		}
+		else if (channels == 2) {
+			format == GL_RG;
+		}
+
+		glGenTextures(1, &m_Id);
+		glBindTexture(GL_TEXTURE_2D, m_Id);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, format, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 	Texture::~Texture() {
 		if (m_Id != 0) {
 			glDeleteTextures(1, &m_Id);

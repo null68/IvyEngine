@@ -108,10 +108,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);TINYGLTF3_ENABLE_FS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\glad;$(SolutionDir)Dependencies\stb;$(SolutionDir)Dependencies\miniaudio</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\glad;$(SolutionDir)Dependencies\stb;$(SolutionDir)Dependencies\miniaudio;$(SolutionDir)Dependencies\tinygltf</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,6 +151,7 @@
     <ClCompile Include="src\Core\Time.cpp" />
     <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\ECS\EntityManager.cpp" />
+    <ClCompile Include="src\Game\Demo.cpp" />
     <ClCompile Include="src\Graphics\Buffer\IndexBuffer.cpp" />
     <ClCompile Include="src\Graphics\Buffer\VertexArray.cpp" />
     <ClCompile Include="src\Graphics\Buffer\VertexBuffer.cpp" />
@@ -162,11 +163,13 @@
     <ClCompile Include="src\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="src\Graphics\Texture\TextureStorage.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Model\Model.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Vendor\glad\glad.c" />
     <ClCompile Include="src\Vendor\miniaudio\miniaudio.c" />
     <ClCompile Include="src\Vendor\stb\stb_image.cpp" />
+    <ClCompile Include="src\Vendor\tinygltf\tiny_gltf_v3.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation\AnimationClip.h" />
@@ -189,6 +192,8 @@
     <ClInclude Include="src\ECS\Components\TransformComponent.h" />
     <ClInclude Include="src\ECS\Entity.h" />
     <ClInclude Include="src\ECS\EntityManager.h" />
+    <ClInclude Include="src\Game\CameraController.h" />
+    <ClInclude Include="src\Game\Demo.h" />
     <ClInclude Include="src\Graphics\Buffer\IndexBuffer.h" />
     <ClInclude Include="src\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="src\Graphics\Mesh\MeshData.h" />
@@ -202,10 +207,13 @@
     <ClInclude Include="src\Graphics\Vertex.h" />
     <ClInclude Include="src\Graphics\Buffer\VertexArray.h" />
     <ClInclude Include="src\Graphics\Buffer\VertexBuffer.h" />
+    <ClInclude Include="src\Model\Model.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\Desktop\stone.glb" />
+    <None Include="assets\models\stone.glb" />
     <None Include="assets\shaders\BasicFragmentShader.glsl" />
     <None Include="assets\shaders\BasicVertexShader.glsl" />
   </ItemGroup>

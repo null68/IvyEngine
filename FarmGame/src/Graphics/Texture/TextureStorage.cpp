@@ -17,6 +17,22 @@ namespace Engine {
 		return texture;
 	}
 
+	std::shared_ptr<Texture> TextureStorage::Load(const std::string& name, const unsigned char* data, int width, int height, int channels) {
+		if (Exists(name))
+			return m_Textures[name];
+
+		auto texture = std::make_shared<Texture>(
+			data,
+			width,
+			height,
+			channels
+		);
+
+		m_Textures[name] = texture;
+		return texture;
+	}
+
+
 	std::shared_ptr<Texture> TextureStorage::Get(const std::string& name)
 	{
 		if (Exists(name))
