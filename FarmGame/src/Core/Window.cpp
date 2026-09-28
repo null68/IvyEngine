@@ -42,6 +42,10 @@ namespace Engine {
 		return glfwWindowShouldClose(m_Window);
 	}
 
+	void Window::CloseWindow() const {
+		glfwSetWindowShouldClose(m_Window, GLFW_TRUE);
+	}
+
 	void Window::PollEvents() const {
 		glfwPollEvents();
 	}

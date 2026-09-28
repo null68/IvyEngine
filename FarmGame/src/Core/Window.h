@@ -10,6 +10,7 @@ namespace Engine {
 		Window(int width, int height, const char* title);
 		virtual ~Window();
 		bool ShouldClose() const;
+		void CloseWindow() const;
 		void PollEvents() const;
 		void SwapBuffers() const;
 
