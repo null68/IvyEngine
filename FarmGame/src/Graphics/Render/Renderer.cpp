@@ -138,7 +138,7 @@ namespace Engine {
 
 	void Renderer::Submit(const Mesh& mesh, TransformComponent& transform, MaterialComponent& material) {
 		auto* shader = material.shader.get();
-		MeshBatchKey key{ shader, &mesh, &material };
+		MeshBatchKey key{ shader, &mesh, material.texture.get(), material.queue};
 
 		MeshBatch* batch = GetOrCreateBatch(s_MeshBatchLookup, key, [shader]() {
 			return std::make_unique<MeshBatch>(shader);

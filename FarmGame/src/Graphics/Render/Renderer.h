@@ -32,18 +32,19 @@ namespace Engine {
 		struct MeshBatchKey {
 			ShaderProgram* shader;
 			const Mesh* mesh;
-			const MaterialComponent* material;
+			const Texture* texture;
+			RenderQueue queue;
 
 			bool operator==(const MeshBatchKey& other) const {
-				return shader == other.shader && mesh == other.mesh && material == other.material;
+				return shader == other.shader && mesh == other.mesh && texture == other.texture && queue == other.queue;
 			}
 		};
 		struct MeshBatchKeyHasher {
 			size_t operator()(const MeshBatchKey& key) const {
 				size_t h1 = std::hash<void*>()(static_cast<void*>(key.shader));
 				size_t h2 = std::hash<const void*>()(static_cast<const void*>(key.mesh));
-				size_t h3 = std::hash<const void*>()(static_cast<const void*>(key.material));
-				return h1 ^ (h2 << 1) ^ (h3 << 2);
+				size_t h3 = std::hash<const void*>()(static_cast<const void*>(key.texture));
+				return h1 ^ (h2 << 1) ^ (h3 << 2) ^ (static_cast<size_t>(key.queue) << 3);
 			}
 		};
 

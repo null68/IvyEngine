@@ -9,10 +9,6 @@
 #include "../../ECS/Components/MaterialComponent.h"
 
 namespace Engine {
-	// GPU-instanced batch of one mesh drawn with one material/shader, submitted as a
-	// list of per-instance model matrices. This is the original renderer's only batch
-	// type; it now just implements IRenderBatch so it can live alongside ParticleBatch,
-	// UIBatch, etc. in the same render queue.
 	class MeshBatch : public IRenderBatch {
 	public:
 		MeshBatch(ShaderProgram* shader);
@@ -41,7 +37,7 @@ namespace Engine {
 		std::vector<glm::mat4> m_Transforms;
 
 		static constexpr size_t MAX_INSTANCES = 1024;
-
+		
 		unsigned int m_InstanceVBO = 0;
 	};
 }
