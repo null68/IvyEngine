@@ -6,6 +6,7 @@
 #include "../ECS/Components/MaterialComponent.h"
 #include "../ECS/Components/CameraComponent.h"
 #include "../Graphics/Shader/ShaderStorage.h"
+#include "../Graphics/Primitives/Primitives.h"
 #include "../Model/Model.h"
 #include "CameraController.h"
 
@@ -33,6 +34,20 @@ namespace Game {
 
 		material.texture = texture;
 		material.textureSlot = 0;
+
+		Entity* cubeEntity = entities->CreateEntity();
+		cubeEntity->AddComponent<MeshComponent>();
+		auto cmesh = Primitives::Cube();
+		cubeEntity->GetComponent<MeshComponent>()->mesh = cmesh;
+
+		cubeEntity->AddComponent<TransformComponent>();
+		transform.Position = glm::vec3(0.0f, -5.0f, 0.0f);
+		transform.Rotation = glm::vec3(0.0f);
+		transform.Scale = glm::vec3(1.0f);
+
+		auto& cmaterial = cubeEntity->AddComponent<MaterialComponent>();
+		cmaterial.shader = ShaderStorage::GetInstance().Get("BasicShader");
+
 
 		Entity* cameraEntity = entities->CreateEntity();
 		auto& camera = cameraEntity->AddComponent<CameraComponent>();

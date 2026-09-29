@@ -1,10 +1,10 @@
 #include "Primitives.h"
 
 namespace Engine {
-		MeshData Primitives::Cube() {
-			MeshData mesh;
+		std::shared_ptr<MeshData> Primitives::Cube() {
+			auto mesh = std::make_shared<MeshData>();
 
-			mesh.vertices = {
+			mesh->vertices = {
 				{{-0.5f, -0.5f,  0.5f}, { 0.0f,  0.0f,  1.0f}, {0.0f, 0.0f}},
 				{{ 0.5f, -0.5f,  0.5f}, { 0.0f,  0.0f,  1.0f}, {1.0f, 0.0f}},
 				{{ 0.5f,  0.5f,  0.5f}, { 0.0f, 0.0f,  1.0f}, {1.0f, 1.0f}},
@@ -36,7 +36,7 @@ namespace Engine {
 				{{-0.5f, -0.5f,  0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}}
 			};
 
-			mesh.indices = {
+			mesh->indices = {
 				 0,  1,  2,  2,  3,  0,
 				 4,  5,  6,  6,  7,  4,
 				 8,  9, 10, 10, 11,  8,
@@ -48,17 +48,17 @@ namespace Engine {
 			return mesh;
 		}
 
-		MeshData Primitives::Plane() {
-			MeshData mesh;
+		std::shared_ptr<MeshData> Primitives::Plane() {
+			auto mesh = std::make_shared<MeshData>();
 
-			mesh.vertices = {
+			mesh->vertices = {
 				{{-0.5f, 0.0f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
 				{{ 0.5f, 0.0f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
 				{{ 0.5f, 0.0f,  0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
 				{{-0.5f, 0.0f,  0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}}
 			};
 
-			mesh.indices = {
+			mesh->indices = {
 				0, 1, 2,
 				2, 3, 0
 			};
@@ -66,17 +66,17 @@ namespace Engine {
 			return mesh;
 		}
 
-		MeshData Primitives::Quad() {
-			MeshData mesh;
+		std::shared_ptr<MeshData> Primitives::Quad() {
+			auto mesh = std::make_shared<MeshData>();
 
-			mesh.vertices = {
+			mesh->vertices = {
 				{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
 				{{ 0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
 				{{ 0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
 				{{-0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}
 			};
 
-			mesh.indices = {
+			mesh->indices = {
 				0, 1, 2,
 				2, 3, 0
 			};
