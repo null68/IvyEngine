@@ -32,4 +32,7 @@ namespace Engine {
 	bool ShaderStorage::Exists(const std::string& name) const {
 		return m_Shaders.find(name) != m_Shaders.end();
 	}
+	void ShaderStorage::Shutdown() {
+		m_Shaders.clear();
+	}
 }

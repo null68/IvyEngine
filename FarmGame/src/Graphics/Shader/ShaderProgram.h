@@ -28,6 +28,6 @@ namespace Engine {
 		unsigned int m_Id;
 		unsigned int m_VertexShaderId;
 		unsigned int m_FragmentShaderId;
-		mutable std::unordered_map<std::string, int> m_UniformLocationCache; // mutable jer se koristi u const funkcijama
+		mutable std::unordered_map<std::string, int> m_UniformLocationCache;
 	};
 }

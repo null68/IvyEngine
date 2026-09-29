@@ -1,21 +1,21 @@
-#include "Batch.h"
+#include "MeshBatch.h"
 #include <glad/glad.h>
 
 namespace Engine {
-	Batch::Batch(ShaderProgram* shader)
+	MeshBatch::MeshBatch(ShaderProgram* shader)
 		: m_Shader(shader) {
 	}
-	Batch::~Batch() {
+	MeshBatch::~MeshBatch() {
 		if (m_InstanceVBO) glDeleteBuffers(1, &m_InstanceVBO);
 	}
-	void Batch::Begin()
+	void MeshBatch::Begin()
 	{
 		m_Transforms.clear();
 		m_Mesh = nullptr;
 		m_Material = nullptr;
 		m_Shader->Bind();
 	}
-	void Batch::Submit(const Mesh& mesh, const TransformComponent& transform, const MaterialComponent& material) {
+	void MeshBatch::Submit(const Mesh& mesh, const TransformComponent& transform, const MaterialComponent& material) {
 		if (!m_Mesh)
 			m_Mesh = &mesh;
 		if (!m_Material)
@@ -23,7 +23,7 @@ namespace Engine {
 		m_Transforms.push_back(transform.GetModelMatrix());
 	}
 
-	void Batch::UploadInstanceBuffer() {
+	void MeshBatch::UploadInstanceBuffer() {
 		if (m_InstanceVBO == 0) {
 			glGenBuffers(1, &m_InstanceVBO);
 		}
@@ -31,7 +31,7 @@ namespace Engine {
 		glBufferData(GL_ARRAY_BUFFER, m_Transforms.size() * sizeof(glm::mat4), m_Transforms.data(), GL_DYNAMIC_DRAW);
 	}
 
-	void Batch::Flush(const glm::mat4& view, const glm::mat4& projection)
+	void MeshBatch::Flush(const glm::mat4& view, const glm::mat4& projection)
 	{
 		if (!HasContent())
 			return;
@@ -66,14 +66,14 @@ namespace Engine {
 		m_Transforms.clear();
 	}
 
-	void Batch::End() {
+	void MeshBatch::End() {
 		if (!HasContent())
 			return;
 
 		UploadInstanceBuffer();
 	}
 
-	bool Batch::IsFull() const {
+	bool MeshBatch::IsFull() const {
 		return m_Transforms.size() >= MAX_INSTANCES;
 	}
 

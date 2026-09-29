@@ -5,6 +5,7 @@ namespace Engine {
 		Opaque = 0, 
 		Skybox = 1,
 		Transparent = 2,
-		UI = 3
+		Particles = 3,
+		UI = 4
 	};
 }

@@ -44,4 +44,7 @@ namespace Engine {
 	bool TextureStorage::Exists(const std::string& name) const {
 		return m_Textures.find(name) != m_Textures.end();
 	}
+	void TextureStorage::Shutdown() {
+		m_Textures.clear();
+	}
 }

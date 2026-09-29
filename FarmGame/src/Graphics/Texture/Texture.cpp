@@ -57,7 +57,7 @@ namespace Engine {
 			format = GL_RED;
 		}
 		else if (channels == 2) {
-			format == GL_RG;
+			format = GL_RG;
 		}
 
 		glGenTextures(1, &m_Id);

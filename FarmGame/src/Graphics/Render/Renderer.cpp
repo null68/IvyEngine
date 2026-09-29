@@ -1,13 +1,19 @@
 #include "Renderer.h"
 #include "../Shader/ShaderStorage.h"
+#include "../Texture/TextureStorage.h"
+#include "../Geometry/QuadGeometry.h"
 
 #include <glad/glad.h>
 #include <algorithm>
 
 namespace Engine {
 	CameraComponent* Renderer::s_ActiveCamera = nullptr;
-	std::vector<std::unique_ptr<Batch>> Renderer::s_Batches;
-	std::unordered_map<Renderer::BatchKey, Batch*, Renderer::BatchKeyHasher> Renderer::s_BatchLookup;
+	std::vector<std::unique_ptr<IRenderBatch>> Renderer::s_Batches;
+
+	std::unordered_map<Renderer::MeshBatchKey, MeshBatch*, Renderer::MeshBatchKeyHasher> Renderer::s_MeshBatchLookup;
+	std::unordered_map<Renderer::ParticleBatchKey, ParticleBatch*, Renderer::ParticleBatchKeyHasher> Renderer::s_ParticleBatchLookup;
+	std::unordered_map<Renderer::UIBatchKey, UIBatch*, Renderer::UIBatchKeyHasher> Renderer::s_UIBatchLookup;
+
 	int Renderer::s_ViewportWidth = 800;
 	int Renderer::s_ViewportHeight = 600;
 
@@ -24,19 +30,29 @@ namespace Engine {
 
 		try {
 			ShaderStorage::GetInstance().Load("BasicShader", "assets/shaders/BasicVertexShader.glsl", "assets/shaders/BasicFragmentShader.glsl");
+			ShaderStorage::GetInstance().Load("ParticleShader", "assets/shaders/ParticleVertexShader.glsl", "assets/shaders/ParticleFragmentShader.glsl");
+			ShaderStorage::GetInstance().Load("UIShader", "assets/shaders/UIVertexShader.glsl", "assets/shaders/UIFragmentShader.glsl");
 		}
 		catch (const std::runtime_error& e) {
-			std::cerr << "Error loading basic shader in Renderer::Init: " << e.what() << std::endl;
+			std::cerr << "Error loading default shaders in Renderer::Init: " << e.what() << std::endl;
 		}
 
 		s_Batches.clear();
-		s_BatchLookup.clear();
+		s_MeshBatchLookup.clear();
+		s_ParticleBatchLookup.clear();
+		s_UIBatchLookup.clear();
 		s_ActiveCamera = nullptr;
 	}
 
 	void Renderer::Shutdown() {
 		s_Batches.clear();
-		s_BatchLookup.clear();
+		s_MeshBatchLookup.clear();
+		s_ParticleBatchLookup.clear();
+		s_UIBatchLookup.clear();
+
+		ShaderStorage::GetInstance().Shutdown();
+		TextureStorage::GetInstance().Shutdown();
+		QuadGeometry::Shutdown();
 	}
 
 	void Renderer::SetViewportSize(int width, int height) {
@@ -54,10 +70,12 @@ namespace Engine {
 	}
 
 	void Renderer::EndScene() {
-		std::stable_sort(s_Batches.begin(), s_Batches.end(), [](const std::unique_ptr<Batch>& a, const std::unique_ptr<Batch>& b) {
+		std::stable_sort(s_Batches.begin(), s_Batches.end(), [](const std::unique_ptr<IRenderBatch>& a, const std::unique_ptr<IRenderBatch>& b) {
 			if (!a->HasContent()) return false;
 			if (!b->HasContent()) return true;
-			return static_cast<int>(a->GetMaterial()->queue) < static_cast<int>(b->GetMaterial()->queue);
+			if (a->GetQueue() != b->GetQueue())
+				return static_cast<int>(a->GetQueue()) < static_cast<int>(b->GetQueue());
+			return a->GetSortOrder() < b->GetSortOrder();
 		});
 
 		glm::mat4 view = s_ActiveCamera->GetViewMatrix();
@@ -78,7 +96,7 @@ namespace Engine {
 			if (!batch->HasContent())
 				continue;
 
-			RenderQueue queue = batch->GetMaterial()->queue;
+			RenderQueue queue = batch->GetQueue();
 			if (queue != current) {
 				ApplyRenderState(queue);
 				current = queue;
@@ -102,22 +120,57 @@ namespace Engine {
 		s_ActiveCamera = nullptr;
 	}
 
-	void Renderer::Submit(const Mesh& mesh, TransformComponent& transform, MaterialComponent& material) {
-		auto* shader = material.shader.get();
-		BatchKey key{ shader, &mesh, &material };
-
-		auto it = s_BatchLookup.find(key);
-		Batch* batch = (it != s_BatchLookup.end()) ? it->second : nullptr;
+	template<typename BatchT, typename KeyT, typename HasherT, typename FactoryFn>
+	BatchT* Renderer::GetOrCreateBatch(std::unordered_map<KeyT, BatchT*, HasherT>& lookup, const KeyT& key, FactoryFn&& factory) {
+		auto it = lookup.find(key);
+		BatchT* batch = (it != lookup.end()) ? it->second : nullptr;
 
 		if (!batch || batch->IsFull()) {
-			auto owned = std::make_unique<Batch>(shader);
+			std::unique_ptr<BatchT> owned = factory();
 			batch = owned.get();
 			batch->Begin();
 			s_Batches.push_back(std::move(owned));
-			s_BatchLookup[key] = batch;
+			lookup[key] = batch;
 		}
 
+		return batch;
+	}
+
+	void Renderer::Submit(const Mesh& mesh, TransformComponent& transform, MaterialComponent& material) {
+		auto* shader = material.shader.get();
+		MeshBatchKey key{ shader, &mesh, &material };
+
+		MeshBatch* batch = GetOrCreateBatch(s_MeshBatchLookup, key, [shader]() {
+			return std::make_unique<MeshBatch>(shader);
+		});
+
 		batch->Submit(mesh, transform, material);
+	}
+
+	void Renderer::SubmitParticle(const Particle& particle, ShaderProgram* shader, const Texture* texture, RenderQueue queue) {
+		if (!shader)
+			return;
+
+		ParticleBatchKey key{ shader, texture, queue };
+
+		ParticleBatch* batch = GetOrCreateBatch(s_ParticleBatchLookup, key, [shader, texture, queue]() {
+			return std::make_unique<ParticleBatch>(shader, texture, queue);
+		});
+
+		batch->Submit(particle);
+	}
+
+	void Renderer::SubmitUI(const UIBatch::InstanceData& instance, ShaderProgram* shader, const Texture* texture, int zOrder) {
+		if (!shader)
+			return;
+
+		UIBatchKey key{ shader, texture, zOrder };
+
+		UIBatch* batch = GetOrCreateBatch(s_UIBatchLookup, key, [shader, texture, zOrder]() {
+			return std::make_unique<UIBatch>(shader, texture, zOrder);
+		});
+
+		batch->Submit(instance);
 	}
 
 	void Renderer::ApplyRenderState(RenderQueue queue) {
@@ -135,6 +188,13 @@ namespace Engine {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glEnable(GL_CULL_FACE);
+			break;
+		case RenderQueue::Particles:
+			glEnable(GL_DEPTH_TEST);
+			glDepthMask(GL_FALSE);
+			glDisable(GL_CULL_FACE);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			break;
 		case RenderQueue::Skybox:
 			glDepthFunc(GL_LEQUAL);
