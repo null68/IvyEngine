@@ -2,11 +2,9 @@
 
 #include "Application.h"
 #include "../Graphics/Render/Renderer.h"
+#include "../Graphics/Render/RenderSystems.h"
 #include "../Scene/SceneManager.h"
 #include "../ECS/Components/CameraComponent.h"
-#include "../ECS/Components/TransformComponent.h"
-#include "../ECS/Components/MeshComponent.h"
-#include "../ECS/Components/MaterialComponent.h"
 
 #include "../Game/Demo.h"
 
@@ -39,14 +37,9 @@ namespace Engine {
 				if (camera) {
 					Renderer::BeginScene(*camera);
 
-					for (Entity* entity : scene->m_EntityManager->GetEntities()) {
-						auto [transform, meshComp, material] =
-							entity->GetComponents<TransformComponent, MeshComponent, MaterialComponent>();
-
-						if (transform && meshComp && meshComp->mesh && material) {
-							Renderer::Submit(*meshComp->mesh, *transform, *material);
-						}
-					}
+					RenderSystems::SubmitMeshes(*scene->m_EntityManager);
+					RenderSystems::SubmitParticles(*scene->m_EntityManager);
+					RenderSystems::SubmitUI(*scene->m_EntityManager);
 
 					Renderer::EndScene();
 				}
