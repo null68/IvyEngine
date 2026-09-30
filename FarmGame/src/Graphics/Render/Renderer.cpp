@@ -58,6 +58,8 @@ namespace Engine {
 	void Renderer::SetViewportSize(int width, int height) {
 		s_ViewportWidth = width;
 		s_ViewportHeight = height;
+
+		glViewport(0, 0, s_ViewportWidth, s_ViewportHeight);
 	}
 
 	void Renderer::BeginScene(CameraComponent& camera) {

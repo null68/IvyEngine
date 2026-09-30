@@ -13,7 +13,6 @@ namespace Engine {
 		Window = std::make_unique<Engine::Window>(800, 600, "Farm Game");
 		Input = std::make_unique<Engine::Input>(Window->GetNativeWindow());
 		Renderer::Init();
-		Renderer::SetViewportSize(Window->GetWidth(), Window->GetHeight());
 
 		// citav gameplay se pokrece kroz scene koje se naprave u Game/ dir-u, zatim se kreiraju ovdje i pokrenu sa SceneManager::GetInstance().LoadScene("")
 		Game::CreateDemoScene();
@@ -24,7 +23,7 @@ namespace Engine {
 			Window->PollEvents();
 			Time::Update();
 
-			if (Input->IsKeyPressed(GLFW_KEY_ESCAPE)) {
+			if (Input->IsKeyPressed(GLFW_KEY_ESCAPE)) { 
 				std::cout << "Escape key pressed. Exiting application." << std::endl;
 				break;
 			}

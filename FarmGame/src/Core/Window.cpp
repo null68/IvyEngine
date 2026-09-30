@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Window.h"
+#include "../Graphics/Render/Renderer.h"
 
 namespace Engine {
 	Window::Window(int width, int height, const char* title)
@@ -27,6 +28,12 @@ namespace Engine {
 		}
 
 		glEnable(GL_MULTISAMPLE);
+		glfwSetFramebufferSizeCallback(m_Window,
+			[](GLFWwindow* window, int width, int height) {
+				Renderer::SetViewportSize(width, height);
+			}
+		);
+
 	}
 
 	Window::~Window() {
