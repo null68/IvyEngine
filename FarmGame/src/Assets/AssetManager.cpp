@@ -31,7 +31,7 @@ namespace Engine {
 		tg3_parse_options_init(&opts);
 		tg3_error_stack_init(&errors);
 
-		tg3_error_code err = tg3_parse_file(&model, &errors, filePath.c_str(), filePath.size(), &opts);
+		tg3_error_code err = tg3_parse_file(&model, &errors, filePath.c_str(), (uint32_t) filePath.size(), &opts);
 
 		if (err != TG3_OK) {
 			for (uint32_t i = 0; i < errors.count; i++) {
