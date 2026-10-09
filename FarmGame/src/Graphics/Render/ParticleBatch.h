@@ -3,7 +3,7 @@
 #include "IRenderBatch.h"
 #include "../Shader/ShaderProgram.h"
 #include "../Texture/Texture.h"
-#include "../../Particles/Particle.h"
+#include "../../Graphics/Particle/Particle.h"
 
 #include <glm.hpp>
 #include <vector>

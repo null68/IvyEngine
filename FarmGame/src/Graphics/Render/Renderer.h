@@ -9,7 +9,7 @@
 #include "../../ECS/Components/CameraComponent.h"
 #include "../../ECS/Components/TransformComponent.h"
 #include "../../ECS/Components/MaterialComponent.h"
-#include "../../Particles/Particle.h"
+#include "../../Graphics/Particle/Particle.h"
 
 namespace Engine {
 	class Renderer {
