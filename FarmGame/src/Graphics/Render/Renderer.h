@@ -4,6 +4,7 @@
 #include "MeshBatch.h"
 #include "ParticleBatch.h"
 #include "UIBatch.h"
+#include <vector>
 #include "../Mesh/Mesh.h"
 
 #include "../../ECS/Components/CameraComponent.h"
@@ -85,16 +86,16 @@ namespace Engine {
 		};
 
 		template<typename BatchT, typename KeyT, typename HasherT, typename FactoryFn>
-		static BatchT* GetOrCreateBatch(std::unordered_map<KeyT, BatchT*, HasherT>& lookup, const KeyT& key, FactoryFn&& factory);
+		static BatchT* GetOrCreateBatch(std::unordered_map<KeyT, std::vector<BatchT*>, HasherT>& lookup, const KeyT& key, FactoryFn&& factory);
 
 		static void ApplyRenderState(RenderQueue queue);
 
 		static CameraComponent* s_ActiveCamera;
 		static std::vector<std::unique_ptr<IRenderBatch>> s_Batches;
 
-		static std::unordered_map<MeshBatchKey, MeshBatch*, MeshBatchKeyHasher> s_MeshBatchLookup;
-		static std::unordered_map<ParticleBatchKey, ParticleBatch*, ParticleBatchKeyHasher> s_ParticleBatchLookup;
-		static std::unordered_map<UIBatchKey, UIBatch*, UIBatchKeyHasher> s_UIBatchLookup;
+		static std::unordered_map<MeshBatchKey, std::vector<MeshBatch*>, MeshBatchKeyHasher> s_MeshBatchLookup;
+		static std::unordered_map<ParticleBatchKey, std::vector<ParticleBatch*>, ParticleBatchKeyHasher> s_ParticleBatchLookup;
+		static std::unordered_map<UIBatchKey, std::vector<UIBatch*>, UIBatchKeyHasher> s_UIBatchLookup;
 
 		static int s_ViewportWidth;
 		static int s_ViewportHeight;

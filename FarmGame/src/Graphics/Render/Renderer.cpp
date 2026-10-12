@@ -10,9 +10,9 @@ namespace Engine {
 	CameraComponent* Renderer::s_ActiveCamera = nullptr;
 	std::vector<std::unique_ptr<IRenderBatch>> Renderer::s_Batches;
 
-	std::unordered_map<Renderer::MeshBatchKey, MeshBatch*, Renderer::MeshBatchKeyHasher> Renderer::s_MeshBatchLookup;
-	std::unordered_map<Renderer::ParticleBatchKey, ParticleBatch*, Renderer::ParticleBatchKeyHasher> Renderer::s_ParticleBatchLookup;
-	std::unordered_map<Renderer::UIBatchKey, UIBatch*, Renderer::UIBatchKeyHasher> Renderer::s_UIBatchLookup;
+	std::unordered_map<Renderer::MeshBatchKey, std::vector<MeshBatch*>, Renderer::MeshBatchKeyHasher> Renderer::s_MeshBatchLookup;
+	std::unordered_map<Renderer::ParticleBatchKey, std::vector<ParticleBatch*>, Renderer::ParticleBatchKeyHasher> Renderer::s_ParticleBatchLookup;
+	std::unordered_map<Renderer::UIBatchKey, std::vector<UIBatch*>, Renderer::UIBatchKeyHasher> Renderer::s_UIBatchLookup;
 
 	int Renderer::s_ViewportWidth = 800;
 	int Renderer::s_ViewportHeight = 600;
@@ -123,20 +123,23 @@ namespace Engine {
 	}
 
 	template<typename BatchT, typename KeyT, typename HasherT, typename FactoryFn>
-	BatchT* Renderer::GetOrCreateBatch(std::unordered_map<KeyT, BatchT*, HasherT>& lookup, const KeyT& key, FactoryFn&& factory) {
-		auto it = lookup.find(key);
-		BatchT* batch = (it != lookup.end()) ? it->second : nullptr;
+	BatchT* Renderer::GetOrCreateBatch(std::unordered_map<KeyT, std::vector<BatchT*>, HasherT>& lookup, const KeyT& key, FactoryFn&& factory) {
+		auto& batches = lookup[key];
 
-		if (!batch || batch->IsFull()) {
-			std::unique_ptr<BatchT> owned = factory();
-			batch = owned.get();
-			batch->Begin();
-			s_Batches.push_back(std::move(owned));
-			lookup[key] = batch;
+		for (BatchT* batch : batches) {
+			if (!batch->IsFull()) {
+				return batch;
+			}
 		}
 
+		auto owned = factory();
+		BatchT* batch = owned.get();
+
+		s_Batches.push_back(std::move(owned));
+		batches.push_back(batch);
+
 		return batch;
-	}
+	}	
 
 	void Renderer::Submit(const Mesh& mesh, TransformComponent& transform, MaterialComponent& material) {
 		auto* shader = material.shader.get();

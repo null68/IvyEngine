@@ -13,7 +13,6 @@ namespace Engine {
 		m_Transforms.clear();
 		m_Mesh = nullptr;
 		m_Material = nullptr;
-		m_Shader->Bind();
 	}
 	void MeshBatch::Submit(const Mesh& mesh, const TransformComponent& transform, const MaterialComponent& material) {
 		if (!m_Mesh)
@@ -62,7 +61,6 @@ namespace Engine {
 			nullptr,
 			static_cast<GLsizei>(m_Transforms.size())
 		);
-
 		m_Transforms.clear();
 	}
 
