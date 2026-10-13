@@ -6,7 +6,7 @@
 #include "../Scene/SceneManager.h"
 #include "../ECS/Components/CameraComponent.h"
 
-#include "../Game/Demo.h"
+#include "../Scene/SceneManager.h"
 
 namespace Engine {
 	Application::Application() {
@@ -14,9 +14,7 @@ namespace Engine {
 		Input = std::make_unique<Engine::Input>(Window->GetNativeWindow());
 		Renderer::Init();
 
-		// citav gameplay se pokrece kroz scene koje se naprave u Game/ dir-u, zatim se kreiraju ovdje i pokrenu sa SceneManager::GetInstance().LoadScene("")
-		Game::CreateDemoScene();
-		SceneManager::GetInstance().LoadScene("Demo");
+		SceneManager::GetInstance().LoadMainScene();
 	}
 	void Application::Run() {
 		while (!Window->ShouldClose()) {

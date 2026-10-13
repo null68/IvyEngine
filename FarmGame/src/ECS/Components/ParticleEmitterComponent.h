@@ -5,7 +5,7 @@
 #include <glm.hpp>
 
 #include "./ScriptComponent.h"
-#include "../../Particles/Particle.h"
+#include "../../Graphics/Particle/Particle.h"
 #include "../../Graphics/Render/RenderQueue.h"
 #include "../../Graphics/Shader/ShaderProgram.h"
 #include "../../Graphics/Texture/Texture.h"

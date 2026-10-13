@@ -8,17 +8,19 @@ namespace Engine {
 	public:
 		const char* m_Name = nullptr;
 		bool m_IsLoaded = false;
-		EntityManager* m_EntityManager;
+		bool m_IsInitialized = false;
+		EntityManager* m_EntityManager = nullptr;
 
 		Scene(const char* name);
-		~Scene();
+		virtual ~Scene();
+			
+		virtual void Initialize() = 0;
+		virtual CameraComponent* GetMainCamera() const final;
 
-		CameraComponent* GetMainCamera() const;
-
-		// Scene Manager svakako nece dopustati vise istoimenih Scena tako da je ovo dovoljno		
 		bool operator==(Scene& scene) {
 			if (strcmp(m_Name, scene.m_Name) == 0)
 				return true;
+			return false;
 		}
 
 		bool operator!=(Scene& scene) {

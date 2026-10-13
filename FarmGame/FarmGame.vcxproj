@@ -108,7 +108,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);TINYGLTF3_ENABLE_FS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);TINYGLTF3_ENABLE_FS;TINYGLTF3_ENABLE_FS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\glad;$(SolutionDir)Dependencies\stb;$(SolutionDir)Dependencies\miniaudio;$(SolutionDir)Dependencies\tinygltf</AdditionalIncludeDirectories>
@@ -126,10 +126,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);TINYGLTF3_ENABLE_FS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\glad;$(SolutionDir)Dependencies\stb</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\glad;$(SolutionDir)Dependencies\stb;$(SolutionDir)Dependencies\miniaudio;$(SolutionDir)Dependencies\tinygltf</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,20 +151,25 @@
     <ClCompile Include="src\Core\Time.cpp" />
     <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\ECS\EntityManager.cpp" />
-    <ClCompile Include="src\Game\Demo.cpp" />
+    <ClCompile Include="src\Game\Scenes\MainScene.cpp" />
     <ClCompile Include="src\Graphics\Buffer\IndexBuffer.cpp" />
     <ClCompile Include="src\Graphics\Buffer\VertexArray.cpp" />
     <ClCompile Include="src\Graphics\Buffer\VertexBuffer.cpp" />
+    <ClCompile Include="src\Graphics\Geometry\QuadGeometry.cpp" />
     <ClCompile Include="src\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Graphics\Primitives\Primitives.cpp" />
-    <ClCompile Include="src\Graphics\Render\Batch.cpp" />
+    <ClCompile Include="src\Graphics\Render\MeshBatch.cpp" />
+    <ClCompile Include="src\Graphics\Render\ParticleBatch.cpp" />
     <ClCompile Include="src\Graphics\Render\Renderer.cpp" />
+    <ClCompile Include="src\Graphics\Render\RenderSystems.cpp" />
+    <ClCompile Include="src\Graphics\Render\UIBatch.cpp" />
     <ClCompile Include="src\Graphics\Shader\ShaderProgram.cpp" />
     <ClCompile Include="src\Graphics\Shader\ShaderStorage.cpp" />
     <ClCompile Include="src\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="src\Graphics\Texture\TextureStorage.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Model\Model.cpp" />
+    <ClCompile Include="src\ECS\Components\ParticleEmitterComponent.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Vendor\glad\glad.c" />
@@ -191,17 +196,23 @@
     <ClInclude Include="src\ECS\Components\MeshComponent.h" />
     <ClInclude Include="src\ECS\Components\ScriptComponent.h" />
     <ClInclude Include="src\ECS\Components\TransformComponent.h" />
+    <ClInclude Include="src\ECS\Components\UIElementComponent.h" />
     <ClInclude Include="src\ECS\Entity.h" />
     <ClInclude Include="src\ECS\EntityManager.h" />
-    <ClInclude Include="src\Game\CameraController.h" />
-    <ClInclude Include="src\Game\Demo.h" />
+    <ClInclude Include="src\Game\Components\CameraController.h" />
+    <ClInclude Include="src\Game\Scenes\MainScene.h" />
     <ClInclude Include="src\Graphics\Buffer\IndexBuffer.h" />
+    <ClInclude Include="src\Graphics\Geometry\QuadGeometry.h" />
     <ClInclude Include="src\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="src\Graphics\Mesh\MeshData.h" />
     <ClInclude Include="src\Graphics\Primitives\Primitives.h" />
-    <ClInclude Include="src\Graphics\Render\Batch.h" />
+    <ClInclude Include="src\Graphics\Render\IRenderBatch.h" />
+    <ClInclude Include="src\Graphics\Render\MeshBatch.h" />
+    <ClInclude Include="src\Graphics\Render\ParticleBatch.h" />
     <ClInclude Include="src\Graphics\Render\Renderer.h" />
     <ClInclude Include="src\Graphics\Render\RenderQueue.h" />
+    <ClInclude Include="src\Graphics\Render\RenderSystems.h" />
+    <ClInclude Include="src\Graphics\Render\UIBatch.h" />
     <ClInclude Include="src\Graphics\Shader\ShaderProgram.h" />
     <ClInclude Include="src\Graphics\Shader\ShaderStorage.h" />
     <ClInclude Include="src\Graphics\Texture\Texture.h" />
@@ -210,6 +221,8 @@
     <ClInclude Include="src\Graphics\Buffer\VertexArray.h" />
     <ClInclude Include="src\Graphics\Buffer\VertexBuffer.h" />
     <ClInclude Include="src\Model\Model.h" />
+    <ClInclude Include="src\Graphics\Particle\Particle.h" />
+    <ClInclude Include="src\ECS\Components\ParticleEmitterComponent.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
   </ItemGroup>
@@ -218,6 +231,13 @@
     <None Include="assets\models\stone.glb" />
     <None Include="assets\shaders\BasicFragmentShader.glsl" />
     <None Include="assets\shaders\BasicVertexShader.glsl" />
+    <None Include="assets\shaders\ParticleFragmentShader.glsl" />
+    <None Include="assets\shaders\ParticleVertexShader.glsl" />
+    <None Include="assets\shaders\UIFragmentShader.glsl" />
+    <None Include="assets\shaders\UIVertexShader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\fonts\Minecraft.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
