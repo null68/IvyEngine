@@ -53,7 +53,7 @@ namespace Engine {
 
 		m_Mesh->Bind();
 		m_Mesh->ConfigureInstanceBuffer(m_InstanceVBO);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDrawElementsInstanced(
 			GL_TRIANGLES,
 			m_Mesh->GetIndexCount(),
